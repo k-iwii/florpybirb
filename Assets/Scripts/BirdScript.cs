@@ -8,7 +8,6 @@ public class BirdScript : MonoBehaviour
     private float flapStrength;
     public LogicScript logic;
     public static bool BirdIsAlive = true;
-    public static int difficulty = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -17,11 +16,11 @@ public class BirdScript : MonoBehaviour
 
         BirdIsAlive = true;
 
-        if (difficulty == 1) {
+        if (Settings.difficulty == 1) {
             flapStrength = 12;
-        } else if (difficulty == 2) {
+        } else if (Settings.difficulty == 2) {
             flapStrength = 10;
-        } else if (difficulty == 3) {
+        } else if (Settings.difficulty == 3) {
             flapStrength = 9;
         }
     }

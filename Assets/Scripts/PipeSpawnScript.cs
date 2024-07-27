@@ -13,12 +13,12 @@ public class PipeSpawnScript : MonoBehaviour
 
     void Start()
     {
-        if (BirdScript.difficulty == 1) {
+        if (Settings.difficulty == 1) {
             detectorSize = 12;
             spawnRate = 3;
-        } else if (BirdScript.difficulty == 2) {
+        } else if (Settings.difficulty == 2) {
             detectorSize = 10;
-        } else if (BirdScript.difficulty == 3) {
+        } else if (Settings.difficulty == 3) {
             detectorSize = 8;
         }
 

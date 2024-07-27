@@ -18,7 +18,7 @@ public class LogicScript : MonoBehaviour
     public GameObject gameOverScreen;
 
     [Header("----- Audio ------")]
-    public static AudioSource musicSource;
+    public AudioSource musicSource;
     public AudioSource SFXSource;
     public AudioClip background;
     public AudioClip point;
@@ -26,13 +26,13 @@ public class LogicScript : MonoBehaviour
     bool deathPlayed = false;
 
     private void Start() {
-        if (Settings.isMuted)
-            musicSource.mute = true;
-        else
-            musicSource.mute = false;
-        
+        //AudioListener.volume = 1; 
+        musicSource.mute = false;
         musicSource.clip = background;
         musicSource.Play();
+
+        if (PlayerPrefs.HasKey("highScore"))
+            highScore = PlayerPrefs.GetInt("highScore");
     }
 
     [ContextMenu("Increase Score")]
@@ -58,6 +58,12 @@ public class LogicScript : MonoBehaviour
         musicSource.Play();
     }
     public void Exit() {
+        if (PlayerPrefs.HasKey("highScore")) {
+            if (highScore > PlayerPrefs.GetInt("highScore"))
+                PlayerPrefs.SetInt("highScore", highScore);
+        } else
+            PlayerPrefs.SetInt("highScore", highScore);
+
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -69,7 +75,7 @@ public class LogicScript : MonoBehaviour
         gameOverScreen.SetActive(true);
         clouds.Pause();
         wing.GetComponent<Animator>().enabled = false;
-        if (!Settings.isMuted) musicSource.Stop();
+        musicSource.Stop();
 
         if (!deathPlayed) {
             SFXSource.clip = death;

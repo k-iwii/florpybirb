@@ -2,26 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System;
 
 public class Settings : MonoBehaviour
 {
-    public Sprite muteImage;
-    public Sprite unmuteImage;
-    public Button muteButton;
-    public static bool isMuted = false;
-    void Start()
-    {
-        isMuted = false;
-        muteButton.image.sprite = muteImage;
+    [SerializeField] Slider volumeSlider;
+    [SerializeField] TMP_Dropdown dropdown;
+    [SerializeField] GameObject settingsPanel;
+    public static int difficulty = 2;
+    private Boolean isStart = true;
+
+    void Start() {
+        isStart = true;
+        if (PlayerPrefs.HasKey("musicVolume") && PlayerPrefs.HasKey("difficulty")) {
+            Load();
+        } else {
+            volumeSlider.value = 1;
+            difficulty = 1;
+            Save();
+        }
+
+        HideSettings();
+        isStart = false;
     }
 
-    public void mutePressed() {
-        isMuted = !isMuted;
+    public void ChangeVolume() {
+        AudioListener.volume = volumeSlider.value; 
+        Save();
+    }
 
-        if (isMuted) {
-            muteButton.image.sprite = unmuteImage;
-        } else {
-            muteButton.image.sprite = muteImage;
+    public void ChangeDifficulty() {
+        difficulty = dropdown.value + 1; 
+        Save();
+    }
+    private void Load() {
+        dropdown.value = PlayerPrefs.GetInt("difficulty");
+        difficulty = dropdown.value + 1;
+        volumeSlider.value = PlayerPrefs.GetFloat("musicVolume");
+        AudioListener.volume = volumeSlider.value;
+    }
+
+    private void Save() {
+        if (isStart) {
+            return;
         }
+
+        PlayerPrefs.SetFloat("musicVolume", volumeSlider.value);
+        PlayerPrefs.SetInt("difficulty", dropdown.value);
+    }
+
+    public void ShowSettings() {
+        settingsPanel.SetActive(true);
+    }
+
+    public void HideSettings() {
+        settingsPanel.SetActive(false);
     }
 }
