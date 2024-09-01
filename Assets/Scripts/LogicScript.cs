@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LogicScript : MonoBehaviour
 {
-    public int curScore;
-    public static int highScore = 0;
     public ParticleSystem clouds;
     public GameObject wing;
 
@@ -16,6 +15,12 @@ public class LogicScript : MonoBehaviour
     public Text endScoreText; // text that it displays on the gameover page
     public Text hiScoreText;
     public GameObject gameOverScreen;
+    int curScore;
+    static int highScore = 0;
+
+    [Header("----- Coin Display ------")]
+    public TextMeshProUGUI coinText;
+    int curCoins;
 
     [Header("----- Audio ------")]
     public AudioSource musicSource;
@@ -26,19 +31,23 @@ public class LogicScript : MonoBehaviour
     bool deathPlayed = false;
 
     private void Start() {
-        //AudioListener.volume = 1; 
         musicSource.mute = false;
         musicSource.clip = background;
         musicSource.Play();
 
         if (PlayerPrefs.HasKey("highScore"))
             highScore = PlayerPrefs.GetInt("highScore");
+        
+        if (!PlayerPrefs.HasKey("coins"))
+            PlayerPrefs.SetInt("coins", 0);
+        else
+            curCoins = PlayerPrefs.GetInt("coins");
     }
 
     [ContextMenu("Increase Score")]
     public void addScore(int toAdd) {
         curScore += toAdd;
-        scoreText.text = curScore + "";
+        scoreText.text = "pts: " + curScore;
 
         if (curScore > highScore) {
             //Debug.Log(curScore + " " + highScore);
@@ -49,6 +58,11 @@ public class LogicScript : MonoBehaviour
         SFXSource.Play();
     }
 
+    public void addCoins() {
+        curCoins++;
+        coinText.text = "Coins: " + curCoins;
+    }
+
     public void restartGame() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         BirdScript.setAlive(true);
@@ -57,6 +71,7 @@ public class LogicScript : MonoBehaviour
         clouds.Play();
         musicSource.Play();
     }
+
     public void Exit() {
         if (PlayerPrefs.HasKey("highScore")) {
             if (highScore > PlayerPrefs.GetInt("highScore"))
@@ -71,6 +86,9 @@ public class LogicScript : MonoBehaviour
         endScoreText.text = "Score: " + curScore;
         hiScoreText.text = "High Score: " + highScore;
         scoreText.enabled = false;
+
+        coinText.enabled = false;
+        PlayerPrefs.SetInt("coins", curCoins);
         
         gameOverScreen.SetActive(true);
         clouds.Pause();

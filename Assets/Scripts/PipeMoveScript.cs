@@ -6,14 +6,6 @@ public class PipeMoveScript : MonoBehaviour
 {
     public float moveSpeed = 5;
     public float deadZone = -45;
-    // public BirdScript script;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         transform.position += (Vector3.left * moveSpeed) * Time.deltaTime;
@@ -25,7 +17,7 @@ public class PipeMoveScript : MonoBehaviour
         
         if (!BirdScript.BirdIsAlive) {
             this.enabled = false;
-            Debug.Log("PipeMoveScript disabled");
+            //Debug.Log("Pipe movement disabled");
         }
     }
 }
